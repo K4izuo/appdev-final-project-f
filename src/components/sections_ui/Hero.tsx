@@ -2,6 +2,14 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Heart, Star, Users } from "lucide-react";
 
 const Hero = () => {
+  // Add a scroll function
+  const scrollToFeaturedPets = () => {
+    const featuredPetsSection = document.getElementById("featured-pets");
+    if (featuredPetsSection) {
+      featuredPetsSection.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16">
       {/* Background gradient */}
@@ -39,7 +47,11 @@ const Hero = () => {
           
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-16">
-            <Button size="lg" className="bg-warm-500 hover:bg-warm-600 text-white px-8 py-4 rounded-full text-lg font-bold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 group">
+            <Button 
+              size="lg" 
+              className="bg-warm-500 hover:bg-warm-600 text-white px-8 py-4 rounded-full text-lg font-bold shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105 group"
+              onClick={scrollToFeaturedPets}
+            >
               Browse Available Pets
               <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
             </Button>

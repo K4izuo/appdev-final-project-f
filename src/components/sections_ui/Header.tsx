@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Menu, X, Heart } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigate = useNavigate();
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -11,6 +13,11 @@ const Header = () => {
       element.scrollIntoView({ behavior: 'smooth' });
       setIsMenuOpen(false);
     }
+  };
+
+  const handleAdoptClick = () => {
+    navigate('/auth/login');
+    setIsMenuOpen(false);
   };
 
   const navItems = [
@@ -50,7 +57,7 @@ const Header = () => {
           {/* CTA Button */}
           <div className="hidden md:flex">
             <Button 
-              onClick={() => scrollToSection('call-to-action')}
+              onClick={handleAdoptClick}
               className="bg-warm-500 hover:bg-warm-600 text-white px-6 py-2 rounded-full font-semibold transition-all duration-200 shadow-md hover:shadow-lg"
             >
               Adopt Now
@@ -81,7 +88,7 @@ const Header = () => {
               ))}
               <div className="pt-2">
                 <Button 
-                  onClick={() => scrollToSection('call-to-action')}
+                  onClick={handleAdoptClick}
                   className="w-full bg-warm-500 hover:bg-warm-600 text-white py-2 rounded-full font-semibold transition-all duration-200"
                 >
                   Adopt Now
