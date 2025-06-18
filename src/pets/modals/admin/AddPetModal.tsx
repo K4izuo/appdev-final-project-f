@@ -1,5 +1,5 @@
 import type React from "react"
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { Plus, Upload, X, Heart, PawPrint } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -16,6 +16,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
+import { toast } from "@/hooks/use-toast"
 import type { Pet } from "@/types/petsType"
 
 interface AddPetModalProps {
@@ -45,19 +46,19 @@ export function AddPetModal({ onAddPet }: AddPetModalProps) {
   })
 
   // Handle focus management when modal opens
-  useEffect(() => {
-    if (open) {
-      // Small delay to ensure modal is fully rendered
-      const timer = setTimeout(() => {
-        // Remove focus from any input that might have been auto-focused
-        const activeElement = document.activeElement as HTMLElement
-        if (activeElement && activeElement.tagName === "INPUT") {
-          activeElement.blur()
-        }
-      }, 100)
-      return () => clearTimeout(timer)
-    }
-  }, [open])
+  // useEffect(() => {
+  //   if (open) {
+  //     // Small delay to ensure modal is fully rendered
+  //     const timer = setTimeout(() => {
+  //       // Remove focus from any input that might have been auto-focused
+  //       const activeElement = document.activeElement as HTMLElement
+  //       if (activeElement && activeElement.tagName === "INPUT") {
+  //         activeElement.blur()
+  //       }
+  //     }, 100)
+  //     return () => clearTimeout(timer)
+  //   }
+  // }, [open])
 
   const handleInputChange = (field: string, value: string | boolean) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
@@ -115,6 +116,14 @@ export function AddPetModal({ onAddPet }: AddPetModalProps) {
 
     setTimeout(() => {
       onAddPet?.(newPet)
+
+      // Show success toast
+      toast({
+        variant: "success",
+        title: "Pet Added Successfully! 🎉",
+        description: `${formData.name} has been added to the adoption center and is now available for adoption.`,
+      })
+
       setFormData({
         name: "",
         species: "",
@@ -154,7 +163,10 @@ export function AddPetModal({ onAddPet }: AddPetModalProps) {
           Add New Pet
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto scrollbar-thin">
+      <DialogContent 
+        className="max-w-4xl max-h-[90vh] overflow-y-auto scrollbar-thin"
+        onOpenAutoFocus={(e) => e.preventDefault()}
+      >
         <DialogHeader>
           <DialogTitle className="text-3xl font-bold text-gray-900 text-center">Add New Pet</DialogTitle>
           <DialogDescription className="text-gray-600 text-center !mt-2">
@@ -162,12 +174,9 @@ export function AddPetModal({ onAddPet }: AddPetModalProps) {
           </DialogDescription>
         </DialogHeader>
 
-        {/* Hidden focusable element to prevent auto-focus on inputs */}
-        <div tabIndex={0} className="sr-only" aria-hidden="true" />
-
         <form onSubmit={handleSubmit} className="space-y-8 mt-4">
           {/* Basic Information Card */}
-          <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg">
+          <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <PawPrint className="w-5 h-5 text-blue-500" />
@@ -304,7 +313,7 @@ export function AddPetModal({ onAddPet }: AddPetModalProps) {
           </Card>
 
           {/* Pet Details Card */}
-          <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg">
+          <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Heart className="w-5 h-5 text-pink-500" />
@@ -365,7 +374,7 @@ export function AddPetModal({ onAddPet }: AddPetModalProps) {
           </Card>
 
           {/* Photos Card */}
-          <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg">
+          <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Upload className="w-5 h-5 text-green-500" />

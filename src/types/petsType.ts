@@ -1,3 +1,5 @@
+import type { LucideIcon } from "lucide-react"
+
 export interface Pet {
   id: string
   name: string
@@ -34,7 +36,7 @@ export interface Application {
 export interface NavigationItem {
   id: string
   label: string
-  icon: any
+  icon: LucideIcon
 }
 
 export interface DashboardStats {

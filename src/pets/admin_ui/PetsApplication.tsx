@@ -15,6 +15,7 @@ import {
 import { Label } from "@/components/ui/label"
 import type { Application } from "@/types/petsType"
 import { getStatusColor, getStatusIcon } from "@/utils/status-helpers"
+import { toast } from "@/hooks/use-toast"
 
 interface ApplicationsProps {
   applications: Application[]
@@ -100,11 +101,29 @@ export function Applications({ applications }: ApplicationsProps) {
                       <p className="text-sm text-gray-600">{app.reason}</p>
                     </div>
                     <div className="flex flex-col sm:flex-row gap-2 pt-4">
-                      <Button className="bg-green-600 hover:bg-green-700">
+                      <Button
+                        className="bg-green-600 hover:bg-green-700"
+                        onClick={() => {
+                          toast({
+                            variant: "success",
+                            title: "Application Approved! ✅",
+                            description: `${app.applicantName}'s application for ${app.petName} has been approved. They will be notified shortly.`,
+                          })
+                        }}
+                      >
                         <CheckCircle className="h-4 w-4 mr-2" />
                         Approve
                       </Button>
-                      <Button variant="destructive">
+                      <Button
+                        variant="destructive"
+                        onClick={() => {
+                          toast({
+                            variant: "destructive",
+                            title: "Application Rejected",
+                            description: `${app.applicantName}'s application for ${app.petName} has been rejected.`,
+                          })
+                        }}
+                      >
                         <XCircle className="h-4 w-4 mr-2" />
                         Reject
                       </Button>

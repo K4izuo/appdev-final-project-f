@@ -4,12 +4,13 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import type { NavigationItem, DashboardStats, Pet } from "@/types/petsType"
 import { samplePets } from "@/pets/pets_data/pets"
 import { sampleApplications } from "@/pets/pets_data/application"
-import { Dashboard } from "@/pets/components/PetsDashboard"
-import { BrowsePets } from "@/pets/components/PetsBrowse"
-import { Applications } from "@/pets/components/PetsApplication"
-import { Adopters } from "@/pets/components/PetsAdopter"
-import { Reports } from "@/pets/components/PetsReport"
-import { Settings as SettingsComponent } from "@/pets/components/PetsSettings"
+import { Dashboard } from "@/pets/admin_ui/PetsDashboard"
+import { BrowsePets } from "@/pets/admin_ui/PetsBrowse"
+import { Applications } from "@/pets/admin_ui/PetsApplication"
+import { Adopters } from "@/pets/admin_ui/PetsAdopter"
+import { Reports } from "@/pets/admin_ui/PetsReport"
+import { Settings as SettingsComponent } from "@/pets/admin_ui/PetsSettings"
+import { Toaster } from "@/components/ui/toaster"
 
 // Navigation items
 const navigationItems: NavigationItem[] = [
@@ -35,18 +36,13 @@ export default function PetAdoptionAdmin() {
   }
 
   // Dashboard stats
-  interface Application {
-    status: "pending" | "approved" | "rejected";
-    // other application properties would be here
-  }
-
   const stats: DashboardStats = {
     totalPets: pets.length,
-    availablePets: pets.filter((p: Pet) => p.status === "available").length,
-    pendingAdoptions: pets.filter((p: Pet) => p.status === "pending").length,
+    availablePets: pets.filter((p) => p.status === "available").length,
+    pendingAdoptions: pets.filter((p) => p.status === "pending").length,
     totalApplications: sampleApplications.length,
-    pendingApplications: sampleApplications.filter((a: Application) => a.status === "pending").length,
-    approvedApplications: sampleApplications.filter((a: Application) => a.status === "approved").length,
+    pendingApplications: sampleApplications.filter((a) => a.status === "pending").length,
+    approvedApplications: sampleApplications.filter((a) => a.status === "approved").length,
   }
 
   const renderContent = () => {
@@ -165,6 +161,7 @@ export default function PetAdoptionAdmin() {
           <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">{renderContent()}</div>
         </main>
       </div>
+      <Toaster />
     </div>
   )
 }
