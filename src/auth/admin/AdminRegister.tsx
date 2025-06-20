@@ -4,58 +4,62 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Checkbox } from "@/components/ui/checkbox"
 import { motion } from "framer-motion"
-import { Mail, Lock, User, Phone, MapPin } from "lucide-react"
+import { Mail, Lock, User, Phone, MapPin, Building } from "lucide-react"
 import { Link } from "react-router-dom"
 
 interface FormData {
-  first_name: string
-  last_name: string
+  firstName: string
+  lastName: string
   email: string
-  phone_number: string
-  address: string
+  phone: string
+  department: string
+  employeeId: string
   password: string
-  password_confirmation: string
+  confirmPassword: string
 }
 
 interface FormErrors {
-  first_name: string
-  last_name: string
+  firstName: string
+  lastName: string
   email: string
-  phone_number: string
-  address: string
+  phone: string
+  department: string
+  employeeId: string
   password: string
-  password_confirmation: string
+  confirmPassword: string
   terms: string
 }
 
-export default function AuthRegisterPage() {
+export default function AdminRegisterPage() {
   const [formData, setFormData] = useState<FormData>({
-    first_name: "",
-    last_name: "",
+    firstName: "",
+    lastName: "",
     email: "",
-    phone_number: "",
-    address: "",
+    phone: "",
+    department: "",
+    employeeId: "",
     password: "",
-    password_confirmation: "",
+    confirmPassword: "",
   })
 
   const [agreeToTerms, setAgreeToTerms] = useState(false)
   const [errors, setErrors] = useState<FormErrors>({
-    first_name: "",
-    last_name: "",
+    firstName: "",
+    lastName: "",
     email: "",
-    phone_number: "",
-    address: "",
+    phone: "",
+    department: "",
+    employeeId: "",
     password: "",
-    password_confirmation: "",
+    confirmPassword: "",
     terms: "",
   })
 
   const [debouncedValues, setDebouncedValues] = useState({
     email: "",
-    phone_number: "",
+    phone: "",
     password: "",
-    password_confirmation: "",
+    confirmPassword: "",
   })
 
   // Debounce email validation
@@ -70,11 +74,11 @@ export default function AuthRegisterPage() {
   // Debounce phone validation
   useEffect(() => {
     const timer = setTimeout(() => {
-      setDebouncedValues((prev) => ({ ...prev, phone_number: formData.phone_number }))
+      setDebouncedValues((prev) => ({ ...prev, phone: formData.phone }))
     }, 550)
 
     return () => clearTimeout(timer)
-  }, [formData.phone_number])
+  }, [formData.phone])
 
   // Debounce password validation
   useEffect(() => {
@@ -88,11 +92,11 @@ export default function AuthRegisterPage() {
   // Debounce confirm password validation
   useEffect(() => {
     const timer = setTimeout(() => {
-      setDebouncedValues((prev) => ({ ...prev, password_confirmation: formData.password_confirmation }))
+      setDebouncedValues((prev) => ({ ...prev, confirmPassword: formData.confirmPassword }))
     }, 550)
 
     return () => clearTimeout(timer)
-  }, [formData.password_confirmation])
+  }, [formData.confirmPassword])
 
   // Validate email when debounced value changes
   useEffect(() => {
@@ -110,17 +114,17 @@ export default function AuthRegisterPage() {
 
   // Validate phone when debounced value changes
   useEffect(() => {
-    if (debouncedValues.phone_number) {
-      if (!validatePhone(debouncedValues.phone_number)) {
+    if (debouncedValues.phone) {
+      if (!validatePhone(debouncedValues.phone)) {
         setErrors((prev) => ({
           ...prev,
-          phone_number: "Please enter a valid phone number",
+          phone: "Please enter a valid phone number",
         }))
       } else {
-        setErrors((prev) => ({ ...prev, phone_number: "" }))
+        setErrors((prev) => ({ ...prev, phone: "" }))
       }
     }
-  }, [debouncedValues.phone_number])
+  }, [debouncedValues.phone])
 
   // Validate password when debounced value changes
   useEffect(() => {
@@ -138,17 +142,17 @@ export default function AuthRegisterPage() {
 
   // Validate confirm password when debounced value changes
   useEffect(() => {
-    if (debouncedValues.password_confirmation && debouncedValues.password) {
-      if (debouncedValues.password_confirmation !== debouncedValues.password) {
+    if (debouncedValues.confirmPassword && debouncedValues.password) {
+      if (debouncedValues.confirmPassword !== debouncedValues.password) {
         setErrors((prev) => ({
           ...prev,
-          password_confirmation: "Passwords do not match",
+          confirmPassword: "Passwords do not match",
         }))
       } else {
-        setErrors((prev) => ({ ...prev, password_confirmation: "" }))
+        setErrors((prev) => ({ ...prev, confirmPassword: "" }))
       }
     }
-  }, [debouncedValues.password_confirmation, debouncedValues.password])
+  }, [debouncedValues.confirmPassword, debouncedValues.password])
 
   const validateEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -177,50 +181,55 @@ export default function AuthRegisterPage() {
     }
   }
 
-  async function handleRegister(e: React.FormEvent) {
+  const handleRegister = (e: React.FormEvent) => {
     e.preventDefault()
 
     const newErrors = {
-      first_name: "",
-      last_name: "",
+      firstName: "",
+      lastName: "",
       email: "",
-      phone_number: "",
-      address: "",
+      phone: "",
+      department: "",
+      employeeId: "",
       password: "",
-      password_confirmation: "",
+      confirmPassword: "",
       terms: "",
     }
 
-    if (!formData.first_name) {
-      newErrors.first_name = "First name is required"
+    if (!formData.firstName) {
+      newErrors.firstName = "First name is required"
     }
 
-    if (!formData.last_name) {
-      newErrors.last_name = "Last name is required"
+    if (!formData.lastName) {
+      newErrors.lastName = "Last name is required"
     }
 
     if (!formData.email) {
       newErrors.email = "Email is required"
     }
 
-    if (!formData.phone_number) {
-      newErrors.phone_number = "Phone number is required"
+    if (!formData.phone) {
+      newErrors.phone = "Phone number is required"
     }
 
-    if (!formData.address) {
-      newErrors.address = "Address is required"
+    if (!formData.department) {
+      newErrors.department = "Department is required"
+    }
+
+    if (!formData.employeeId) {
+      newErrors.employeeId = "Employee ID is required"
     }
 
     if (!formData.password) {
       newErrors.password = "Password is required"
     }
 
-    if (!formData.password_confirmation) {
-      newErrors.password_confirmation = "Please confirm your password"
+    if (!formData.confirmPassword) {
+      newErrors.confirmPassword = "Please confirm your password"
     }
 
-    if (formData.password && formData.password_confirmation && formData.password !== formData.password_confirmation) {
-      newErrors.password_confirmation = "Passwords do not match"
+    if (formData.password && formData.confirmPassword && formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = "Passwords do not match"
     }
 
     if (!agreeToTerms) {
@@ -231,45 +240,30 @@ export default function AuthRegisterPage() {
 
     // If all fields are valid, proceed with registration
     if (
-      formData.first_name &&
-      formData.last_name &&
+      formData.firstName &&
+      formData.lastName &&
       formData.email &&
-      formData.phone_number &&
-      formData.address &&
+      formData.phone &&
+      formData.department &&
+      formData.employeeId &&
       formData.password &&
-      formData.password_confirmation &&
-      formData.password === formData.password_confirmation &&
+      formData.confirmPassword &&
+      formData.password === formData.confirmPassword &&
       validateEmail(formData.email) &&
-      validatePhone(formData.phone_number) &&
+      validatePhone(formData.phone) &&
       agreeToTerms
     ) {
-
-      const response = await fetch("/api/user/register", {
-        method: "post",
-        body: JSON.stringify(formData),
-      });
-
-      // if (!response.ok) {
-      //   console.error(`Registration failed: ${response.status} ${response.statusText}`);
-      //   // Handle the error (show message to user, etc.)
-      //   return;
-      // }
-
-      try {
-        const data = await response.json();
-        console.log("Registering with:", data);
-      } catch (error) {
-        console.error("Failed to parse response:", error);
-      }
+      console.log("Admin registering with:", formData)
+      // Add your API call or registration logic here
     }
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50 flex items-center justify-center p-4 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 flex items-center justify-center p-4 relative overflow-hidden">
       {/* Background decorative elements */}
-      <div className="absolute top-0 left-0 w-32 h-32 bg-red-500 rounded-full opacity-10 -translate-x-16 -translate-y-16"></div>
-      <div className="absolute bottom-0 right-0 w-48 h-48 bg-orange-400 rounded-full opacity-10 translate-x-24 translate-y-24"></div>
-      <div className="absolute top-1/2 right-0 w-24 h-24 bg-red-400 rounded-full opacity-10 translate-x-12"></div>
+      <div className="absolute top-0 left-0 w-32 h-32 bg-blue-600 rounded-full opacity-10 -translate-x-16 -translate-y-16"></div>
+      <div className="absolute bottom-0 right-0 w-48 h-48 bg-indigo-500 rounded-full opacity-10 translate-x-24 translate-y-24"></div>
+      <div className="absolute top-1/2 right-0 w-24 h-24 bg-blue-500 rounded-full opacity-10 translate-x-12"></div>
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
@@ -279,8 +273,8 @@ export default function AuthRegisterPage() {
         <div className="p-8 w-full flex flex-col justify-center">
           <form onSubmit={handleRegister} className="space-y-4 max-w-2xl mx-auto w-full">
             <div className="space-y-2 text-center">
-              <h1 className="text-2xl font-bold text-gray-800">Create Account</h1>
-              <p className="text-gray-600 text-sm">Please fill in your details to register</p>
+              <h1 className="text-2xl font-bold text-gray-800">Admin Registration</h1>
+              <p className="text-gray-600 text-sm">Please fill in your administrative details</p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -290,13 +284,13 @@ export default function AuthRegisterPage() {
                   <Input
                     type="text"
                     placeholder="First Name"
-                    value={formData.first_name}
-                    onChange={handleInputChange("first_name")}
-                    className="h-9 sm:h-10 text-sm sm:text-[15px] pl-9 border-2 border-gray-200 rounded-xl focus:border-red-400 focus:ring-red-400/20 transition-colors"
+                    value={formData.firstName}
+                    onChange={handleInputChange("firstName")}
+                    className="h-9 sm:h-10 text-sm sm:text-[15px] pl-9 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-blue-500/20 transition-colors"
                   />
                   <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                 </div>
-                {errors.first_name && <p className="text-red-500 text-xs mt-1">{errors.first_name}</p>}
+                {errors.firstName && <p className="text-red-500 text-xs mt-1">{errors.firstName}</p>}
               </div>
 
               {/* Last Name Field */}
@@ -305,13 +299,13 @@ export default function AuthRegisterPage() {
                   <Input
                     type="text"
                     placeholder="Last Name"
-                    value={formData.last_name}
-                    onChange={handleInputChange("last_name")}
-                    className="h-9 sm:h-10 text-sm sm:text-[15px] pl-9 border-2 border-gray-200 rounded-xl focus:border-red-400 focus:ring-red-400/20 transition-colors"
+                    value={formData.lastName}
+                    onChange={handleInputChange("lastName")}
+                    className="h-9 sm:h-10 text-sm sm:text-[15px] pl-9 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-blue-500/20 transition-colors"
                   />
                   <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                 </div>
-                {errors.last_name && <p className="text-red-500 text-xs mt-1">{errors.last_name}</p>}
+                {errors.lastName && <p className="text-red-500 text-xs mt-1">{errors.lastName}</p>}
               </div>
 
               {/* Email Field - Full Width */}
@@ -319,10 +313,10 @@ export default function AuthRegisterPage() {
                 <div className="relative">
                   <Input
                     type="email"
-                    placeholder="Email"
+                    placeholder="Corporate Email"
                     value={formData.email}
                     onChange={handleInputChange("email")}
-                    className="h-9 sm:h-10 text-sm sm:text-[15px] pl-9 border-2 border-gray-200 rounded-xl focus:border-red-400 focus:ring-red-400/20 transition-colors"
+                    className="h-9 sm:h-10 text-sm sm:text-[15px] pl-9 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-blue-500/20 transition-colors"
                   />
                   <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                 </div>
@@ -335,28 +329,43 @@ export default function AuthRegisterPage() {
                   <Input
                     type="tel"
                     placeholder="Phone Number"
-                    value={formData.phone_number}
-                    onChange={handleInputChange("phone_number")}
-                    className="h-9 sm:h-10 text-sm sm:text-[15px] pl-9 border-2 border-gray-200 rounded-xl focus:border-red-400 focus:ring-red-400/20 transition-colors"
+                    value={formData.phone}
+                    onChange={handleInputChange("phone")}
+                    className="h-9 sm:h-10 text-sm sm:text-[15px] pl-9 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-blue-500/20 transition-colors"
                   />
                   <Phone className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                 </div>
-                {errors.phone_number && <p className="text-red-500 text-xs mt-1">{errors.phone_number}</p>}
+                {errors.phone && <p className="text-red-500 text-xs mt-1">{errors.phone}</p>}
               </div>
 
-              {/* Address Field */}
+              {/* Department Field */}
               <div className="space-y-2">
                 <div className="relative">
                   <Input
                     type="text"
-                    placeholder="Address"
-                    value={formData.address}
-                    onChange={handleInputChange("address")}
-                    className="h-9 sm:h-10 text-sm sm:text-[15px] pl-9 border-2 border-gray-200 rounded-xl focus:border-red-400 focus:ring-red-400/20 transition-colors"
+                    placeholder="Department"
+                    value={formData.department}
+                    onChange={handleInputChange("department")}
+                    className="h-9 sm:h-10 text-sm sm:text-[15px] pl-9 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-blue-500/20 transition-colors"
+                  />
+                  <Building className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                </div>
+                {errors.department && <p className="text-red-500 text-xs mt-1">{errors.department}</p>}
+              </div>
+
+              {/* Employee ID Field - Full Width */}
+              <div className="space-y-2 sm:col-span-2">
+                <div className="relative">
+                  <Input
+                    type="text"
+                    placeholder="Employee ID"
+                    value={formData.employeeId}
+                    onChange={handleInputChange("employeeId")}
+                    className="h-9 sm:h-10 text-sm sm:text-[15px] pl-9 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-blue-500/20 transition-colors"
                   />
                   <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                 </div>
-                {errors.address && <p className="text-red-500 text-xs mt-1">{errors.address}</p>}
+                {errors.employeeId && <p className="text-red-500 text-xs mt-1">{errors.employeeId}</p>}
               </div>
 
               {/* Password Field */}
@@ -367,7 +376,7 @@ export default function AuthRegisterPage() {
                     placeholder="Password"
                     value={formData.password}
                     onChange={handleInputChange("password")}
-                    className="h-9 sm:h-10 text-sm sm:text-[15px] pl-9 border-2 border-gray-200 rounded-xl focus:border-red-400 focus:ring-red-400/20 transition-colors"
+                    className="h-9 sm:h-10 text-sm sm:text-[15px] pl-9 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-blue-500/20 transition-colors"
                   />
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                 </div>
@@ -380,13 +389,13 @@ export default function AuthRegisterPage() {
                   <Input
                     type="password"
                     placeholder="Confirm Password"
-                    value={formData.password_confirmation}
-                    onChange={handleInputChange("password_confirmation")}
-                    className="h-9 sm:h-10 text-sm sm:text-[15px] pl-9 border-2 border-gray-200 rounded-xl focus:border-red-400 focus:ring-red-400/20 transition-colors"
+                    value={formData.confirmPassword}
+                    onChange={handleInputChange("confirmPassword")}
+                    className="h-9 sm:h-10 text-sm sm:text-[15px] pl-9 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-blue-500/20 transition-colors"
                   />
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                 </div>
-                {errors.password_confirmation && <p className="text-red-500 text-xs mt-1">{errors.password_confirmation}</p>}
+                {errors.confirmPassword && <p className="text-red-500 text-xs mt-1">{errors.confirmPassword}</p>}
               </div>
             </div>
 
@@ -397,15 +406,15 @@ export default function AuthRegisterPage() {
                   id="terms"
                   checked={agreeToTerms}
                   onCheckedChange={(checked) => setAgreeToTerms(checked === true)}
-                  className="border-2 border-gray-300 data-[state=checked]:bg-red-500 data-[state=checked]:border-red-500"
+                  className="border-2 border-gray-300 data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600"
                 />
                 <label htmlFor="terms" className="text-xs sm:text-sm text-gray-600 cursor-pointer leading-relaxed">
                   I agree to the{" "}
-                  <Button variant="link" className="text-red-500 hover:text-red-600 p-0 text-xs sm:text-sm underline">
-                    Terms and Conditions
+                  <Button variant="link" className="text-blue-600 hover:text-blue-700 p-0 text-xs sm:text-sm underline">
+                    Admin Terms and Conditions
                   </Button>{" "}
                   and{" "}
-                  <Button variant="link" className="text-red-500 hover:text-red-600 p-0 text-xs sm:text-sm underline">
+                  <Button variant="link" className="text-blue-600 hover:text-blue-700 p-0 text-xs sm:text-sm underline">
                     Privacy Policy
                   </Button>
                 </label>
@@ -416,19 +425,19 @@ export default function AuthRegisterPage() {
             {/* Register Button - Full Width */}
             <Button
               type="submit"
-              className="w-full h-9 sm:h-10 font-semibold text-sm sm:text-base bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-[1.02]"
+              className="w-full h-9 sm:h-10 font-semibold text-sm sm:text-base bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-[1.02]"
             >
-              Create Account
+              Create Admin Account
             </Button>
 
             {/* Login Link */}
             <div className="text-center pt-2">
               <p className="text-sm text-gray-500">
-                Already have an account?{" "}
-                <Link to="/auth/login">
+                Already have admin access?{" "}
+                <Link to="/admin/login">
                   <Button
                     variant="link"
-                    className="text-red-500 hover:text-red-600 p-0 text-sm font-semibold"
+                    className="text-blue-600 hover:text-blue-700 p-0 text-sm font-semibold"
                     type="button"
                   >
                     Sign in here!

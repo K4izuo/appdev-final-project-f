@@ -2,7 +2,14 @@ import type React from "react"
 import { MapPin, Calendar, Stethoscope, Info, Edit, Trash2, MoreVertical } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog"
 import { Separator } from "@/components/ui/separator"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import type { Pet } from "@/types/petsType"
@@ -47,6 +54,13 @@ export function AdminPetDetailModal({ pet, children, onEditPet, onDeletePet }: A
     <Dialog>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="max-w-6xl w-[95vw] max-h-[95vh] overflow-hidden p-0 gap-0 bg-white">
+        <DialogHeader className="sr-only">
+          <DialogTitle>Pet Details - {pet.name}</DialogTitle>
+          <DialogDescription>
+            View and manage detailed information for {pet.name}, including health status, characteristics, and
+            administrative actions.
+          </DialogDescription>
+        </DialogHeader>
         <div className="flex flex-col h-full max-h-[95vh]">
           {/* Mobile/Tablet Layout - Stacked */}
           <div className="block lg:hidden">

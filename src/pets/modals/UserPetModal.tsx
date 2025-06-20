@@ -3,7 +3,14 @@ import { useState } from "react"
 import { Heart, MapPin, Calendar, Stethoscope } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog"
 import { Separator } from "@/components/ui/separator"
 import type { Pet } from "@/types/petsType"
 import { toast } from "@/hooks/use-toast"
@@ -45,6 +52,12 @@ export function UserPetDetailModal({ pet, children }: UserPetDetailModalProps) {
     <Dialog>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="max-w-5xl max-h-[95vh] overflow-hidden p-0 gap-0 bg-white">
+        <DialogHeader className="sr-only">
+          <DialogTitle>Pet Details - {pet.name}</DialogTitle>
+          <DialogDescription>
+            View detailed information about {pet.name}, including characteristics, health status, and adoption details.
+          </DialogDescription>
+        </DialogHeader>
         <div className="flex flex-col lg:flex-row h-full max-h-[95vh]">
           {/* Left Side - Image */}
           <div className="relative lg:w-1/2 h-64 lg:h-auto min-h-[400px]">
