@@ -1,52 +1,52 @@
-import type React from "react"
-import { useState, useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Checkbox } from "@/components/ui/checkbox"
-import { motion } from "framer-motion"
-import { Mail, Lock, Heart } from "lucide-react"
-import { Link } from "react-router-dom"
+import type React from "react";
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
+import { motion } from "framer-motion";
+import { Mail, Lock, Heart } from "lucide-react";
+import { Link } from "react-router-dom";
 
 interface FormData {
-  email: string
-  password: string
+  email: string;
+  password: string;
 }
 
 interface FormErrors {
-  email: string
-  password: string
+  email: string;
+  password: string;
 }
 
 export default function AuthLoginPage() {
   const [formData, setFormData] = useState<FormData>({
     email: "",
     password: "",
-  })
+  });
 
-  const [rememberMe, setRememberMe] = useState(false)
-  const [errors, setErrors] = useState<FormErrors>({ email: "", password: "" })
+  const [rememberMe, setRememberMe] = useState(false);
+  const [errors, setErrors] = useState<FormErrors>({ email: "", password: "" });
 
   const [debouncedValues, setDebouncedValues] = useState({
     email: "",
     password: "",
-  })
+  });
 
   // Update all useEffect hooks to use formData:
   // Debounce email validation
   useEffect(() => {
     const timer = setTimeout(() => {
-      setDebouncedValues((prev) => ({ ...prev, email: formData.email }))
-    }, 550)
-    return () => clearTimeout(timer)
-  }, [formData.email])
+      setDebouncedValues((prev) => ({ ...prev, email: formData.email }));
+    }, 550);
+    return () => clearTimeout(timer);
+  }, [formData.email]);
 
   // Debounce password validation
   useEffect(() => {
     const timer = setTimeout(() => {
-      setDebouncedValues((prev) => ({ ...prev, password: formData.password }))
-    }, 550)
-    return () => clearTimeout(timer)
-  }, [formData.password])
+      setDebouncedValues((prev) => ({ ...prev, password: formData.password }));
+    }, 550);
+    return () => clearTimeout(timer);
+  }, [formData.password]);
 
   // Update validation useEffects to use debouncedValues:
   useEffect(() => {
@@ -55,12 +55,12 @@ export default function AuthLoginPage() {
         setErrors((prev) => ({
           ...prev,
           email: "Please enter a valid email address",
-        }))
+        }));
       } else {
-        setErrors((prev) => ({ ...prev, email: "" }))
+        setErrors((prev) => ({ ...prev, email: "" }));
       }
     }
-  }, [debouncedValues.email])
+  }, [debouncedValues.email]);
 
   useEffect(() => {
     if (debouncedValues.password) {
@@ -68,81 +68,82 @@ export default function AuthLoginPage() {
         setErrors((prev) => ({
           ...prev,
           password: "Password must be at least 8 characters long",
-        }))
+        }));
       } else {
-        setErrors((prev) => ({ ...prev, password: "" }))
+        setErrors((prev) => ({ ...prev, password: "" }));
       }
     }
-  }, [debouncedValues.password])
+  }, [debouncedValues.password]);
 
   const validateEmail = (email: string) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    return emailRegex.test(email)
-  }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
 
   const validatePassword = (password: string) => {
-    return password.length >= 8
-  }
+    return password.length >= 8;
+  };
 
   // Replace individual change handlers with generic one:
-  const handleInputChange = (field: keyof FormData) => (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value
-    setFormData((prev) => ({
-      ...prev,
-      [field]: value,
-    }))
+  const handleInputChange =
+    (field: keyof FormData) => (e: React.ChangeEvent<HTMLInputElement>) => {
+      const value = e.target.value;
+      setFormData((prev) => ({
+        ...prev,
+        [field]: value,
+      }));
 
-    // Clear error for this field if it exists
-    if (errors[field]) {
-      setErrors((prev) => ({ ...prev, [field]: "" }))
-    }
-  }
+      // Clear error for this field if it exists
+      if (errors[field]) {
+        setErrors((prev) => ({ ...prev, [field]: "" }));
+      }
+    };
 
   // Update handleLogin to use formData:
   async function handleLogin(e: React.FormEvent) {
-    e.preventDefault()
+    e.preventDefault();
 
-    const newErrors = { email: "", password: "" }
+    const newErrors = { email: "", password: "" };
 
     if (!formData.email) {
-      newErrors.email = "Email is required"
+      newErrors.email = "Email is required";
     }
 
     if (!formData.password) {
-      newErrors.password = "Password is required"
+      newErrors.password = "Password is required";
     }
 
-    setErrors(newErrors)
+    setErrors(newErrors);
 
     if (formData.email && formData.password && validateEmail(formData.email)) {
       try {
         const response = await fetch("/api/user/login", {
           method: "POST",
           headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
           },
           body: JSON.stringify(formData),
         });
 
         const data = await response.json();
-        
+
         if (!response.ok) {
           console.error("Login failed:", data);
-          setErrors((prev) => ({ 
-            ...prev, 
-            email: data.message || "Login failed. Please check your credentials." 
+          setErrors((prev) => ({
+            ...prev,
+            email:
+              data.message || "Login failed. Please check your credentials.",
           }));
           return;
         }
 
         console.log("Login successful:", data);
         // Handle successful login (redirect, set auth state, etc.)
-        
       } catch (error) {
         console.error("Login request failed:", error);
-        setErrors((prev) => ({ 
-          ...prev, 
-          email: "Network error. Please try again." 
+        setErrors((prev) => ({
+          ...prev,
+          email: "Network error. Please try again.",
         }));
       }
     }
@@ -176,7 +177,8 @@ export default function AuthLoginPage() {
               <h2 className="text-3xl font-bold">Pet Care</h2>
               <p className="text-red-100 text-lg">User Portal</p>
               <p className="text-red-200 text-sm max-w-xs">
-                Sign In To Continue managing our furry friends and their loving families
+                Sign In To Continue managing our furry friends and their loving
+                families
               </p>
             </div>
 
@@ -198,10 +200,17 @@ export default function AuthLoginPage() {
 
         {/* Right Side - Login Form */}
         <div className="p-8 w-full lg:w-1/2 flex flex-col justify-center">
-          <form onSubmit={handleLogin} className="space-y-6 max-w-sm mx-auto w-full">
+          <form
+            onSubmit={handleLogin}
+            className="space-y-6 max-w-sm mx-auto w-full"
+          >
             <div className="space-y-2 text-center">
-              <h1 className="text-2xl font-bold text-gray-800">Welcome Back!</h1>
-              <p className="text-gray-600 text-sm">Please enter your credentials to continue</p>
+              <h1 className="text-2xl font-bold text-gray-800">
+                Welcome Back!
+              </h1>
+              <p className="text-gray-600 text-sm">
+                Please enter your credentials to continue
+              </p>
             </div>
 
             <div className="w-full sm:w-[98%] md:w-[94%] space-y-3 mx-auto">
@@ -217,7 +226,9 @@ export default function AuthLoginPage() {
                   />
                   <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                 </div>
-                {errors.email && <p className="text-red-500 text-sm ml-1">{errors.email}</p>}
+                {errors.email && (
+                  <p className="text-red-500 text-sm ml-1">{errors.email}</p>
+                )}
               </div>
 
               {/* Password Field */}
@@ -232,7 +243,9 @@ export default function AuthLoginPage() {
                   />
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                 </div>
-                {errors.password && <p className="text-red-500 text-sm ml-1">{errors.password}</p>}
+                {errors.password && (
+                  <p className="text-red-500 text-sm ml-1">{errors.password}</p>
+                )}
               </div>
 
               {/* Remember Me & Forgot Password */}
@@ -241,10 +254,15 @@ export default function AuthLoginPage() {
                   <Checkbox
                     id="remember"
                     checked={rememberMe}
-                    onCheckedChange={(checked) => setRememberMe(checked === true)}
+                    onCheckedChange={(checked) =>
+                      setRememberMe(checked === true)
+                    }
                     className="border-2 border-gray-300 data-[state=checked]:bg-red-500 data-[state=checked]:border-red-500"
                   />
-                  <label htmlFor="remember" className="text-sm text-gray-600 cursor-pointer">
+                  <label
+                    htmlFor="remember"
+                    className="text-sm text-gray-600 cursor-pointer"
+                  >
                     Remember Me
                   </label>
                 </div>
@@ -279,11 +297,32 @@ export default function AuthLoginPage() {
                     </Button>
                   </Link>
                 </p>
+                <p className="text-xs text-gray-400">
+                  <Link to="/auth/moderator-login">
+                    <Button
+                      variant="link"
+                      className="text-gray-500 hover:text-gray-600 p-0 text-xs"
+                      type="button"
+                    >
+                      Moderator Login
+                    </Button>
+                  </Link>
+                  {" | "}
+                  <Link to="/auth/admin-login">
+                    <Button
+                      variant="link"
+                      className="text-gray-500 hover:text-gray-600 p-0 text-xs"
+                      type="button"
+                    >
+                      Admin Login
+                    </Button>
+                  </Link>
+                </p>
               </div>
             </div>
           </form>
         </div>
       </motion.div>
     </div>
-  )
+  );
 }

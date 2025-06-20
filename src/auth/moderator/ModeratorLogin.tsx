@@ -236,26 +236,14 @@ export default function ModeratorLoginPage() {
 
               {/* Additional Links */}
               <div className="text-center pt-2 space-y-1">
-                <p className="text-sm text-gray-500">
-                  Need moderator access?{" "}
-                  <Link to="/moderator/request">
-                    <Button
-                      variant="link"
-                      className="text-green-600 hover:text-green-700 p-0 text-sm font-semibold"
-                      type="button"
-                    >
-                      Request Access
-                    </Button>
-                  </Link>
-                </p>
                 <p className="text-xs text-gray-400">
-                  <Link to="/auth/login">
+                  <Link to="/auth/user-login">
                     <Button variant="link" className="text-gray-500 hover:text-gray-600 p-0 text-xs" type="button">
                       Regular User Login
                     </Button>
                   </Link>
                   {" | "}
-                  <Link to="/admin/login">
+                  <Link to="/auth/admin-login">
                     <Button variant="link" className="text-gray-500 hover:text-gray-600 p-0 text-xs" type="button">
                       Admin Login
                     </Button>

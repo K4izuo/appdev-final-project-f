@@ -1,51 +1,51 @@
-import type React from "react"
-import { useState, useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Checkbox } from "@/components/ui/checkbox"
-import { motion } from "framer-motion"
-import { Mail, Lock, Shield } from "lucide-react"
-import { Link } from "react-router-dom"
+import type React from "react";
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
+import { motion } from "framer-motion";
+import { Mail, Lock, Shield } from "lucide-react";
+import { Link } from "react-router-dom";
 
 interface FormData {
-  email: string
-  password: string
+  email: string;
+  password: string;
 }
 
 interface FormErrors {
-  email: string
-  password: string
+  email: string;
+  password: string;
 }
 
 export default function AdminLoginPage() {
   const [formData, setFormData] = useState<FormData>({
     email: "",
     password: "",
-  })
+  });
 
-  const [rememberMe, setRememberMe] = useState(false)
-  const [errors, setErrors] = useState<FormErrors>({ email: "", password: "" })
+  const [rememberMe, setRememberMe] = useState(false);
+  const [errors, setErrors] = useState<FormErrors>({ email: "", password: "" });
 
   const [debouncedValues, setDebouncedValues] = useState({
     email: "",
     password: "",
-  })
+  });
 
   // Debounce email validation
   useEffect(() => {
     const timer = setTimeout(() => {
-      setDebouncedValues((prev) => ({ ...prev, email: formData.email }))
-    }, 550)
-    return () => clearTimeout(timer)
-  }, [formData.email])
+      setDebouncedValues((prev) => ({ ...prev, email: formData.email }));
+    }, 550);
+    return () => clearTimeout(timer);
+  }, [formData.email]);
 
   // Debounce password validation
   useEffect(() => {
     const timer = setTimeout(() => {
-      setDebouncedValues((prev) => ({ ...prev, password: formData.password }))
-    }, 550)
-    return () => clearTimeout(timer)
-  }, [formData.password])
+      setDebouncedValues((prev) => ({ ...prev, password: formData.password }));
+    }, 550);
+    return () => clearTimeout(timer);
+  }, [formData.password]);
 
   // Validate email when debounced value changes
   useEffect(() => {
@@ -54,12 +54,12 @@ export default function AdminLoginPage() {
         setErrors((prev) => ({
           ...prev,
           email: "Please enter a valid email address",
-        }))
+        }));
       } else {
-        setErrors((prev) => ({ ...prev, email: "" }))
+        setErrors((prev) => ({ ...prev, email: "" }));
       }
     }
-  }, [debouncedValues.email])
+  }, [debouncedValues.email]);
 
   // Validate password when debounced value changes
   useEffect(() => {
@@ -68,54 +68,55 @@ export default function AdminLoginPage() {
         setErrors((prev) => ({
           ...prev,
           password: "Password must be at least 8 characters long",
-        }))
+        }));
       } else {
-        setErrors((prev) => ({ ...prev, password: "" }))
+        setErrors((prev) => ({ ...prev, password: "" }));
       }
     }
-  }, [debouncedValues.password])
+  }, [debouncedValues.password]);
 
   const validateEmail = (email: string) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-    return emailRegex.test(email)
-  }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
 
   const validatePassword = (password: string) => {
-    return password.length >= 8
-  }
+    return password.length >= 8;
+  };
 
-  const handleInputChange = (field: keyof FormData) => (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value
-    setFormData((prev) => ({
-      ...prev,
-      [field]: value,
-    }))
+  const handleInputChange =
+    (field: keyof FormData) => (e: React.ChangeEvent<HTMLInputElement>) => {
+      const value = e.target.value;
+      setFormData((prev) => ({
+        ...prev,
+        [field]: value,
+      }));
 
-    // Clear error for this field if it exists
-    if (errors[field]) {
-      setErrors((prev) => ({ ...prev, [field]: "" }))
-    }
-  }
+      // Clear error for this field if it exists
+      if (errors[field]) {
+        setErrors((prev) => ({ ...prev, [field]: "" }));
+      }
+    };
 
   const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
 
-    const newErrors = { email: "", password: "" }
+    const newErrors = { email: "", password: "" };
 
     if (!formData.email) {
-      newErrors.email = "Email is required"
+      newErrors.email = "Email is required";
     }
 
     if (!formData.password) {
-      newErrors.password = "Password is required"
+      newErrors.password = "Password is required";
     }
 
-    setErrors(newErrors)
+    setErrors(newErrors);
 
     if (formData.email && formData.password && validateEmail(formData.email)) {
-      console.log("Admin logging in with:", { ...formData, rememberMe })
+      console.log("Admin logging in with:", { ...formData, rememberMe });
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 font-['Poppins'] flex items-center justify-center p-2 sm:p-4 lg:p-6 relative overflow-hidden">
@@ -145,7 +146,8 @@ export default function AdminLoginPage() {
               <h2 className="text-3xl font-bold">Admin Portal</h2>
               <p className="text-blue-100 text-lg">Management Dashboard</p>
               <p className="text-blue-200 text-sm max-w-xs">
-                Secure access to administrative functions and system management tools
+                Secure access to administrative functions and system management
+                tools
               </p>
             </div>
 
@@ -167,10 +169,15 @@ export default function AdminLoginPage() {
 
         {/* Right Side - Login Form */}
         <div className="p-8 w-full lg:w-1/2 flex flex-col justify-center">
-          <form onSubmit={handleLogin} className="space-y-6 max-w-sm mx-auto w-full">
+          <form
+            onSubmit={handleLogin}
+            className="space-y-6 max-w-sm mx-auto w-full"
+          >
             <div className="space-y-2 text-center">
               <h1 className="text-2xl font-bold text-gray-800">Admin Access</h1>
-              <p className="text-gray-600 text-sm">Please enter your administrator credentials</p>
+              <p className="text-gray-600 text-sm">
+                Please enter your administrator credentials
+              </p>
             </div>
 
             <div className="w-full sm:w-[98%] md:w-[94%] space-y-3 mx-auto">
@@ -186,7 +193,9 @@ export default function AdminLoginPage() {
                   />
                   <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                 </div>
-                {errors.email && <p className="text-red-500 text-sm ml-1">{errors.email}</p>}
+                {errors.email && (
+                  <p className="text-red-500 text-sm ml-1">{errors.email}</p>
+                )}
               </div>
 
               {/* Password Field */}
@@ -201,7 +210,9 @@ export default function AdminLoginPage() {
                   />
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                 </div>
-                {errors.password && <p className="text-red-500 text-sm ml-1">{errors.password}</p>}
+                {errors.password && (
+                  <p className="text-red-500 text-sm ml-1">{errors.password}</p>
+                )}
               </div>
 
               {/* Remember Me & Forgot Password */}
@@ -210,10 +221,15 @@ export default function AdminLoginPage() {
                   <Checkbox
                     id="remember"
                     checked={rememberMe}
-                    onCheckedChange={(checked) => setRememberMe(checked === true)}
+                    onCheckedChange={(checked) =>
+                      setRememberMe(checked === true)
+                    }
                     className="border-2 border-gray-300 data-[state=checked]:bg-blue-600 data-[state=checked]:border-blue-600"
                   />
-                  <label htmlFor="remember" className="text-sm text-gray-600 cursor-pointer">
+                  <label
+                    htmlFor="remember"
+                    className="text-sm text-gray-600 cursor-pointer"
+                  >
                     Remember Me
                   </label>
                 </div>
@@ -236,15 +252,24 @@ export default function AdminLoginPage() {
 
               {/* Sign Up Link */}
               <div className="text-center pt-2">
-                <p className="text-sm text-gray-500">
-                  Need admin access?{" "}
-                  <Link to="/admin/register">
+                <p className="text-xs text-gray-400">
+                  <Link to="/auth/user-login">
                     <Button
                       variant="link"
-                      className="text-blue-600 hover:text-blue-700 p-0 text-sm font-semibold"
+                      className="text-gray-500 hover:text-gray-600 p-0 text-xs"
                       type="button"
                     >
-                      Request Account
+                      Regular User Login
+                    </Button>
+                  </Link>
+                  {" | "}
+                  <Link to="/auth/moderator-login">
+                    <Button
+                      variant="link"
+                      className="text-gray-500 hover:text-gray-600 p-0 text-xs"
+                      type="button"
+                    >
+                      Moderator Login
                     </Button>
                   </Link>
                 </p>
@@ -254,5 +279,5 @@ export default function AdminLoginPage() {
         </div>
       </motion.div>
     </div>
-  )
+  );
 }
