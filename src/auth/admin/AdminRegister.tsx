@@ -5,7 +5,8 @@ import { Input } from "@/components/ui/input"
 import { Checkbox } from "@/components/ui/checkbox"
 import { motion } from "framer-motion"
 import { Mail, Lock, User, Phone, MapPin, Building } from "lucide-react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
+// import { AppContext } from "@/types/AppContextType"
 
 interface FormData {
   firstName: string
@@ -15,7 +16,7 @@ interface FormData {
   department: string
   employeeId: string
   password: string
-  confirmPassword: string
+  password_confirmation: string
 }
 
 interface FormErrors {
@@ -26,11 +27,15 @@ interface FormErrors {
   department: string
   employeeId: string
   password: string
-  confirmPassword: string
+  password_confirmation: string
   terms: string
 }
 
 export default function AdminRegisterPage() {
+
+  const navigate = useNavigate();
+  // const {setToken} = useContext(AppContext);
+
   const [formData, setFormData] = useState<FormData>({
     firstName: "",
     lastName: "",
@@ -39,7 +44,7 @@ export default function AdminRegisterPage() {
     department: "",
     employeeId: "",
     password: "",
-    confirmPassword: "",
+    password_confirmation: "",
   })
 
   const [agreeToTerms, setAgreeToTerms] = useState(false)
@@ -51,7 +56,7 @@ export default function AdminRegisterPage() {
     department: "",
     employeeId: "",
     password: "",
-    confirmPassword: "",
+    password_confirmation: "",
     terms: "",
   })
 
@@ -59,7 +64,7 @@ export default function AdminRegisterPage() {
     email: "",
     phone: "",
     password: "",
-    confirmPassword: "",
+    password_confirmation: "",
   })
 
   // Debounce email validation
@@ -92,11 +97,11 @@ export default function AdminRegisterPage() {
   // Debounce confirm password validation
   useEffect(() => {
     const timer = setTimeout(() => {
-      setDebouncedValues((prev) => ({ ...prev, confirmPassword: formData.confirmPassword }))
+      setDebouncedValues((prev) => ({ ...prev, password_confirmation: formData.password_confirmation }))
     }, 550)
 
     return () => clearTimeout(timer)
-  }, [formData.confirmPassword])
+  }, [formData.password_confirmation])
 
   // Validate email when debounced value changes
   useEffect(() => {
@@ -142,17 +147,17 @@ export default function AdminRegisterPage() {
 
   // Validate confirm password when debounced value changes
   useEffect(() => {
-    if (debouncedValues.confirmPassword && debouncedValues.password) {
-      if (debouncedValues.confirmPassword !== debouncedValues.password) {
+    if (debouncedValues.password_confirmation && debouncedValues.password) {
+      if (debouncedValues.password_confirmation !== debouncedValues.password) {
         setErrors((prev) => ({
           ...prev,
-          confirmPassword: "Passwords do not match",
+          password_confirmation: "Passwords do not match",
         }))
       } else {
-        setErrors((prev) => ({ ...prev, confirmPassword: "" }))
+        setErrors((prev) => ({ ...prev, password_confirmation: "" }))
       }
     }
-  }, [debouncedValues.confirmPassword, debouncedValues.password])
+  }, [debouncedValues.password_confirmation, debouncedValues.password])
 
   const validateEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -181,7 +186,7 @@ export default function AdminRegisterPage() {
     }
   }
 
-  const handleRegister = (e: React.FormEvent) => {
+  async function handleRegister(e: React.FormEvent) {
     e.preventDefault()
 
     const newErrors = {
@@ -192,7 +197,7 @@ export default function AdminRegisterPage() {
       department: "",
       employeeId: "",
       password: "",
-      confirmPassword: "",
+      password_confirmation: "",
       terms: "",
     }
 
@@ -224,12 +229,12 @@ export default function AdminRegisterPage() {
       newErrors.password = "Password is required"
     }
 
-    if (!formData.confirmPassword) {
-      newErrors.confirmPassword = "Please confirm your password"
+    if (!formData.password_confirmation) {
+      newErrors.password_confirmation = "Please confirm your password"
     }
 
-    if (formData.password && formData.confirmPassword && formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = "Passwords do not match"
+    if (formData.password && formData.password_confirmation && formData.password !== formData.password_confirmation) {
+      newErrors.password_confirmation = "Passwords do not match"
     }
 
     if (!agreeToTerms) {
@@ -247,14 +252,34 @@ export default function AdminRegisterPage() {
       formData.department &&
       formData.employeeId &&
       formData.password &&
-      formData.confirmPassword &&
-      formData.password === formData.confirmPassword &&
+      formData.password_confirmation &&
+      formData.password === formData.password_confirmation &&
       validateEmail(formData.email) &&
       validatePhone(formData.phone) &&
       agreeToTerms
     ) {
-      console.log("Admin registering with:", formData)
-      // Add your API call or registration logic here
+
+      const response = await fetch("/api/admin/register", {
+        method: "post",
+        body: JSON.stringify(formData),
+      });
+
+      // if (!response.ok) {
+      //   console.error(`Registration failed: ${response.status} ${response.statusText}`);
+      //   // Handle the error (show message to user, etc.)
+      //   return;
+      // }
+
+      try {
+        const data = await response.json();
+        console.log("Registering with:", data);
+        // localStorage.setItem("adminToken", data.token);
+        // setToken(data.token);
+        navigate("/auth/admin-login");
+      } catch (error) {
+        console.error("Failed to parse response:", error);
+      }
+      // console.log("Admin registering with:", formData)
     }
   }
 
@@ -389,13 +414,13 @@ export default function AdminRegisterPage() {
                   <Input
                     type="password"
                     placeholder="Confirm Password"
-                    value={formData.confirmPassword}
-                    onChange={handleInputChange("confirmPassword")}
+                    value={formData.password_confirmation}
+                    onChange={handleInputChange("password_confirmation")}
                     className="h-9 sm:h-10 text-sm sm:text-[15px] pl-9 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-blue-500/20 transition-colors"
                   />
                   <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                 </div>
-                {errors.confirmPassword && <p className="text-red-500 text-xs mt-1">{errors.confirmPassword}</p>}
+                {errors.password_confirmation && <p className="text-red-500 text-xs mt-1">{errors.password_confirmation}</p>}
               </div>
             </div>
 
@@ -434,7 +459,7 @@ export default function AdminRegisterPage() {
             <div className="text-center pt-2">
               <p className="text-sm text-gray-500">
                 Already have admin access?{" "}
-                <Link to="/admin/login">
+                <Link to="/auth/admin-login">
                   <Button
                     variant="link"
                     className="text-blue-600 hover:text-blue-700 p-0 text-sm font-semibold"

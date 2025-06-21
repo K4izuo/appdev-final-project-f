@@ -1,17 +1,17 @@
 import { useState } from "react"
 import { Heart, User, Search, MapPin, Calendar } from "lucide-react"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
-import type { Application } from "@/types/petsType"
-import { samplePets } from "@/pets/pets_data/pets"
+import type { Application, NavigationItem } from "@/types/petsType"
+// import { samplePets } from "@/pets/pets_data/pets"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { UserPetDetailModal } from "@/pets/modals/UserPetModal"
 import { Toaster } from "@/components/ui/toaster"
+import { useAllPets } from "@/hooks/useAllPets"
 
 // User navigation items
 const userNavigationItems: NavigationItem[] = [
@@ -70,21 +70,21 @@ const getStatusColor = (status: string) => {
 }
 
 export default function UserDashboard() {
+
+  const { pets } = useAllPets()
   const [activeSection, setActiveSection] = useState("browse")
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [searchTerm, setSearchTerm] = useState("")
   const [filterStatus, setFilterStatus] = useState("available")
 
   // Filter pets for user (only available pets)
-  const availablePets = samplePets.filter((pet) => pet.status === "available")
+  const availablePets = pets.filter((pet) => pet.status === "available")
   const filteredPets = availablePets.filter((pet) => {
     const matchesSearch =
       pet.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       pet.breed.toLowerCase().includes(searchTerm.toLowerCase()) ||
       pet.species.toLowerCase().includes(searchTerm.toLowerCase())
-
     const matchesFilter = filterStatus === "available" || pet.species.toLowerCase() === filterStatus.toLowerCase()
-
     return matchesSearch && matchesFilter
   })
 
@@ -246,9 +246,9 @@ export default function UserDashboard() {
               <div className="bg-gradient-to-r from-blue-400 to-indigo-500 p-2 rounded-lg">
                 <Heart className="h-6 w-6 text-white" />
               </div>
-              <div className="ml-3">
-                <h1 className="text-lg font-semibold text-gray-900">PetAdopt</h1>
-                <p className="text-xs text-gray-500">Find Your Pet</p>
+              <div className="ml-3 min-w-0 flex-1">
+                <p className="text-sm font-medium text-gray-900 truncate">John Doe</p>
+                <p className="text-xs text-gray-500 truncate">john.doe@email.com</p>
               </div>
             </div>
           </div>
@@ -280,16 +280,26 @@ export default function UserDashboard() {
 
           {/* User Profile */}
           <div className="flex-shrink-0 px-4 py-4 border-t border-blue-200">
-            <div className="flex items-center">
-              <Avatar className="h-10 w-10">
-                <AvatarImage src="/placeholder.svg?height=32&width=32" alt="User" />
-                <AvatarFallback>JD</AvatarFallback>
-              </Avatar>
-              <div className="ml-3 min-w-0 flex-1">
-                <p className="text-sm font-medium text-gray-900 truncate">John Doe</p>
-                <p className="text-xs text-gray-500 truncate">john.doe@email.com</p>
-              </div>
-            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-full bg-white text-gray-700 border-gray-300 hover:bg-red-50 hover:text-red-600 hover:border-red-300 transition-all duration-300"
+              onClick={() => {
+                // Add your logout logic here
+                console.log("Logout clicked")
+                // Example: redirect to login page or call logout API
+              }}
+            >
+              <svg className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                />
+              </svg>
+              Sign Out
+            </Button>
           </div>
         </div>
       </div>

@@ -16,7 +16,7 @@ const Header = () => {
   };
 
   const handleAdoptClick = () => {
-    navigate('/auth/login');
+    navigate('/auth/user-login');
     setIsMenuOpen(false);
   };
 

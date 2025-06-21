@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { motion } from "framer-motion";
 import { Mail, Lock, Heart } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 interface FormData {
   email: string;
@@ -18,6 +18,9 @@ interface FormErrors {
 }
 
 export default function AuthLoginPage() {
+
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState<FormData>({
     email: "",
     password: "",
@@ -117,7 +120,7 @@ export default function AuthLoginPage() {
 
     if (formData.email && formData.password && validateEmail(formData.email)) {
       try {
-        const response = await fetch("/api/user/login", {
+        const response = await fetch("/api/pet-user/login", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -139,6 +142,7 @@ export default function AuthLoginPage() {
 
         console.log("Login successful:", data);
         // Handle successful login (redirect, set auth state, etc.)
+        navigate("/user-page");
       } catch (error) {
         console.error("Login request failed:", error);
         setErrors((prev) => ({
@@ -287,7 +291,7 @@ export default function AuthLoginPage() {
               <div className="text-center pt-2">
                 <p className="text-sm text-gray-500">
                   Don't have account?{" "}
-                  <Link to="/auth/register">
+                  <Link to="/auth/user-register">
                     <Button
                       variant="link"
                       className="text-red-500 hover:text-red-600 p-0 text-sm font-semibold"

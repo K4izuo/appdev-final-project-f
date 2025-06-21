@@ -34,6 +34,7 @@ export default function AdminLoginPage() {
   // Debounce email validation
   useEffect(() => {
     const timer = setTimeout(() => {
+      // Only update state if component is still mounted
       setDebouncedValues((prev) => ({ ...prev, email: formData.email }));
     }, 550);
     return () => clearTimeout(timer);

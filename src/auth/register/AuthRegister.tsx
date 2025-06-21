@@ -1,11 +1,12 @@
 import type React from "react"
-import { useState, useEffect } from "react"
+import { useState, useEffect, useContext } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Checkbox } from "@/components/ui/checkbox"
 import { motion } from "framer-motion"
 import { Mail, Lock, User, Phone, MapPin } from "lucide-react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
+import { AppContext } from "@/types/AppContextType"
 
 interface FormData {
   first_name: string
@@ -29,6 +30,10 @@ interface FormErrors {
 }
 
 export default function AuthRegisterPage() {
+
+  const navigate = useNavigate();
+  const {setToken} = useContext(AppContext);
+
   const [formData, setFormData] = useState<FormData>({
     first_name: "",
     last_name: "",
@@ -244,7 +249,7 @@ export default function AuthRegisterPage() {
       agreeToTerms
     ) {
 
-      const response = await fetch("/api/user/register", {
+      const response = await fetch("/api/pet-user/register", {
         method: "post",
         body: JSON.stringify(formData),
       });
@@ -258,6 +263,9 @@ export default function AuthRegisterPage() {
       try {
         const data = await response.json();
         console.log("Registering with:", data);
+        localStorage.setItem("token", data.token);
+        setToken(data.token);
+        navigate("/auth/user-login");
       } catch (error) {
         console.error("Failed to parse response:", error);
       }

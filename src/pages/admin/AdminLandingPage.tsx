@@ -11,6 +11,7 @@ import { Adopters } from "@/pets/admin_ui/PetsAdopter"
 import { Reports } from "@/pets/admin_ui/PetsReport"
 import { Settings as SettingsComponent } from "@/pets/admin_ui/PetsSettings"
 import { Toaster } from "@/components/ui/toaster"
+// import { AppContext } from "@/types/AppContextType"
 
 // Navigation items
 const navigationItems: NavigationItem[] = [
@@ -26,6 +27,8 @@ export default function PetAdoptionAdmin() {
   const [activeSection, setActiveSection] = useState("dashboard")
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [pets, setPets] = useState<Pet[]>(samplePets)
+
+  // const { user: { first_name, last_name, email } } = useContext(AppContext);
 
   const handleAddPet = (newPetData: Omit<Pet, "id">) => {
     const newPet: Pet = {
@@ -121,11 +124,11 @@ export default function PetAdoptionAdmin() {
             <div className="flex items-center transform transition-all duration-300 hover:scale-105">
               <Avatar className="h-8 w-8 sm:h-10 sm:w-10">
                 <AvatarImage src="/placeholder.svg?height=32&width=32" alt="Admin" />
-                <AvatarFallback className="text-xs sm:text-sm">AD</AvatarFallback>
+                <AvatarFallback className="text-xs sm:text-sm">AB</AvatarFallback> {/* {first_name?.[0]?.toUpperCase() || ""}{last_name?.[0]?.toUpperCase() || ""} */}
               </Avatar>
               <div className="ml-3 min-w-0 flex-1">
                 <p className="text-xs sm:text-sm font-medium text-gray-900 truncate">Admin User</p>
-                <p className="text-xs text-gray-500 truncate">admin@petadopt.com</p>
+                <p className="text-xs text-gray-500 truncate">admin@example.com</p>
               </div>
             </div>
           </div>
